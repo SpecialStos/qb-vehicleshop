@@ -261,7 +261,8 @@ local function createFreeUseShop(shopShape, name)
                                 isServer = true,
                                 event = 'qb-vehicleshop:server:buyShowroomVehicle',
                                 args = {
-                                    buyVehicle = Config.Shops[insideShop]['ShowroomVehicles'][ClosestVehicle].chosenVehicle
+                                    buyVehicle = Config.Shops[insideShop]['ShowroomVehicles'][ClosestVehicle].chosenVehicle,
+                                    location = Config.Shops[insideShop]['VehicleSpawn']
                                 }
                             }
                         },
@@ -273,7 +274,8 @@ local function createFreeUseShop(shopShape, name)
                                 event = 'qb-vehicleshop:client:openFinance',
                                 args = {
                                     price = getVehPrice(),
-                                    buyVehicle = Config.Shops[insideShop]['ShowroomVehicles'][ClosestVehicle].chosenVehicle
+                                    buyVehicle = Config.Shops[insideShop]['ShowroomVehicles'][ClosestVehicle].chosenVehicle,
+                                    location = Config.Shops[insideShop]['VehicleSpawn']
                                 }
                             }
                         },
@@ -347,7 +349,8 @@ local function createManagedShop(shopShape, name)
                                 event = 'qb-vehicleshop:client:openCustomFinance',
                                 args = {
                                     price = getVehPrice(),
-                                    vehicle = Config.Shops[insideShop]['ShowroomVehicles'][ClosestVehicle].chosenVehicle
+                                    vehicle = Config.Shops[insideShop]['ShowroomVehicles'][ClosestVehicle].chosenVehicle,
+                                    location = Config.Shops[insideShop]['VehicleSpawn']
                                 }
                             }
                         },
@@ -658,7 +661,7 @@ RegisterNetEvent('qb-vehicleshop:client:openFinance', function(data)
     })
     if dialog then
         if not dialog.downPayment or not dialog.paymentAmount then return end
-        TriggerServerEvent('qb-vehicleshop:server:financeVehicle', dialog.downPayment, dialog.paymentAmount, data.buyVehicle)
+        TriggerServerEvent('qb-vehicleshop:server:financeVehicle', dialog.downPayment, dialog.paymentAmount, data.buyVehicle, Config.Shops[insideShop]['VehicleSpawn'])
     end
 end)
 
@@ -689,7 +692,7 @@ RegisterNetEvent('qb-vehicleshop:client:openCustomFinance', function(data)
     })
     if dialog then
         if not dialog.downPayment or not dialog.paymentAmount or not dialog.playerid then return end
-        TriggerServerEvent('qb-vehicleshop:server:sellfinanceVehicle', dialog.downPayment, dialog.paymentAmount, data.vehicle, dialog.playerid)
+        TriggerServerEvent('qb-vehicleshop:server:sellfinanceVehicle', dialog.downPayment, dialog.paymentAmount, data.vehicle, dialog.playerid, Config.Shops[insideShop]['VehicleSpawn'])
     end
 end)
 
@@ -857,7 +860,7 @@ RegisterNetEvent('qb-vehicleshop:client:openIdMenu', function(data)
         if data.type == 'testDrive' then
             TriggerServerEvent('qb-vehicleshop:server:customTestDrive', data.vehicle, dialog.playerid)
         elseif data.type == 'sellVehicle' then
-            TriggerServerEvent('qb-vehicleshop:server:sellShowroomVehicle', data.vehicle, dialog.playerid)
+            TriggerServerEvent('qb-vehicleshop:server:sellShowroomVehicle', data.vehicle, dialog.playerid, Config.Shops[insideShop]['VehicleSpawn'])
         end
     end
 end)
